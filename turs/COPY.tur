@@ -1,0 +1,10 @@
+&name: COPY
+&init: q0
+&accept: qAccept
+&nbr: 2
+
+q0,*,#
+q0,*,*,>,>
+
+q0,#,#
+qAccept,#,#,-,-
