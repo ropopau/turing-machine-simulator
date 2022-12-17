@@ -62,9 +62,7 @@ qComp,#,0,#,>,<,-
 qWrBack,~,#,#
 qCopy23,~,#,#,-,<,-
 
-//Fin écriture premier élément
-
-//Début comparaison
+//Comparaison
 
 qComp,#,0,#
 qComp,#,0,#,>,-,-
