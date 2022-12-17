@@ -1,6 +1,8 @@
 from turing import *
 from reader import *
 import sys
+import os
+import time
 
 def un_pas(formel, mot):
     Tur = Machine(formel, mot)
@@ -11,38 +13,44 @@ def un_pas(formel, mot):
     etat = Tur.get_etatActu()
     print(etat)
 
-def exec(formel, mot):
+def exec(formel, mot, affiche = True):
     Tur = Machine(formel, mot)
 
     etat = formel["qi"]
-
+    os.system("cls")
     while etat != formel["qf"]:
         Tur.pas()
         etat = Tur.get_etatActu()
-        print(etat)
-        affichage(Tur)
+        if affiche:
+            print(etat)
+            affichage(Tur)
+            time.sleep(0.2)
+            os.system("cls")
         if etat == "Non accepté":
             break
+    print("Etat: ", etat)
+    affichage(Tur)
+
 
 def affichage(tur):
     bandes = tur.get_bandes().get_list()
     for elem in bandes:
         pointeur = ["---" if _ != 15 else " ^ " for _  in range(31)]
         ruban = [" - " for _  in range(31)]
+        indice = 1
         for lettre in elem["mot"]:
-            #print(elem["mot"])
-            print(elem["pos"])
-            ind = 15 - elem["pos"]
+            ind = 15 - elem["pos"] + indice - 1
             #
             if ind < 0:
                 ind = 0
             elif ind > 30:
                 ind = 30
             #
-            if lettre == "#":
+            if lettre == "#" or lettre == "+":
                 lettre = "-"
             ruban[ind] = " " + lettre + " "
             #print(ruban)
+            indice += 1
         sys.stdout.write("/".join(map(str, ruban)) + "\n")
         sys.stdout.write("-".join(map(str, pointeur)) + "\n")
     print("\n")
@@ -74,5 +82,5 @@ def affichage(tur):
 
 if __name__ == "__main__":
     formel = CodeTuring("turs\\TRI_BINAIRE.tur").get_auto()
-    exec(formel, "~10#11#11#00~")
+    exec(formel, "~10#11#11#00#01#11#00#11#11#00#01#11#00~")
     pass
