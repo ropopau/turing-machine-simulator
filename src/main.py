@@ -8,9 +8,9 @@ from tkinter import Tk, filedialog
 # Effectue un pas sans afficher les rubans
 def un_pas(formel, mot):
     Tur = Machine(formel, mot)
-    etat = formel["qi"]
+    _etat = formel["qi"]
     Tur.pas()
-    etat = Tur.get_etatActu()
+    _etat = Tur.get_etatActu()
 
 # Exécute la machine jusqu'à la fin
 def exec(formel, mot, affiche = True):

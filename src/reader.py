@@ -7,7 +7,7 @@ class CodeTuring(object):
     def __init__(self, fichier):
         self.nom = None # ok
         self.Si = [] # ok
-        self.Ga = ["#"] # ok
+        self.Ga = [] # ok
         self.Qe = [] # ok
         self.qi = None # ok
         self.qf = None # ok
@@ -43,25 +43,44 @@ class CodeTuring(object):
                 if temp[0] not in self.Qe:
                     self.Qe.append(temp[0])
 
-                # Ajout de l'alphabet et de l'alphabet de travaille
-                z = 1
-                while z <= self.nbr:
-                    if temp2[z] not in self.Si:
-                        self.Si.append(temp2[z])
-                        self.Ga.append(temp2[z])
+                if len(temp2[1]) == 1:
+                    # Ajout des transitions
+                    etat = temp[0]
+                    lu = tuple(temp[1:self.nbr + 1])
+                    dest = temp2[0]
+                    change = tuple(temp2[1:self.nbr + 1])
+                    mvt = tuple(temp2[self.nbr + 1:self.nbr*2 + 1])
+                    sous_dico = {"dest": dest, "change": change, "mvt": mvt}
+                    z = 1
+                    while z <= self.nbr:
+                        if temp2[z] not in self.Ga:
+                            self.Ga.append(temp2[z])
+                            if temp2[z] != "#":
+                                self.Si.append(temp2[z])
+                            
 
-                    if temp[z] not in self.Si:
-                        self.Si.append(temp[z])
-                        self.Ga.append(temp[z])
-                    z += 1
-
-                # Ajout des transitions
-                etat = temp[0]
-                lu = tuple(temp[1:self.nbr + 1])
-                dest = temp2[0]
-                change = tuple(temp2[1:self.nbr + 1])
-                mvt = tuple(temp2[self.nbr + 1:self.nbr*2 + 1])
-                sous_dico = {"dest": dest, "change": change, "mvt": mvt}
+                        if temp[z] not in self.Ga:
+                            self.Ga.append(temp[z])
+                            if temp[z] != "#":
+                                self.Si.append(temp[z])
+                            
+                        z += 1
+                elif len(temp2[1]) > 1:
+                    # Ajout des transitions
+                    etat = temp[0]
+                    lu = tuple(temp[1:self.nbr + 1])
+                    dest = temp2[0]
+                    change = temp2[1]
+                    mvt = tuple(["-" for _ in range(self.nbr)])
+                    sous_dico = {"dest": dest, "change": change, "mvt": mvt}
+                    # Ajout de l'alphabet et de l'alphabet de travaille
+                    z = 1
+                    while z <= self.nbr:
+                        if temp[z] not in self.Ga:
+                            self.Ga.append(temp[z])
+                            if temp[z] != "#":
+                                self.Si.append(temp[z])
+                        z += 1
 
                 if etat not in self.Dedico.keys():
                     self.Dedico[etat] = {}
@@ -86,7 +105,7 @@ class CodeTuring(object):
         return {"Si":self.Si, "Ga":self.Ga, "Qe":self.Qe, "qi": self.qi, "qf": self.qf, "dico": self.Dedico, "nbr": self.nbr}
 
 if __name__ == "__main__":
-    a = CodeTuring("turs\\TRI_BINAIRE.tur")    ## Racine du projet + ...
+    a = CodeTuring("turs\\TEST_LINKER.tur")    ## Racine du projet + ...
     print(a.get_dico())
 
 
