@@ -80,7 +80,7 @@ def interface_exec():
     formel = CodeTuring(open_file).get_auto()
     exec(formel, mot)
 
-    re = input("Voulez-vous utiliser une autre machine?o/n\n")
+    re = input("Voulez-vous utiliser une autre machine?o/*\n")
     if re == "o" or re == "O":
         interface_exec()
 
