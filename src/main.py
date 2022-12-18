@@ -5,20 +5,18 @@ import os
 import time
 from tkinter import Tk, filedialog
 
-
+# Effectue un pas sans afficher les rubans
 def un_pas(formel, mot):
     Tur = Machine(formel, mot)
-
-
     etat = formel["qi"]
     Tur.pas()
     etat = Tur.get_etatActu()
-    print(etat)
 
+# Exécute la machine jusqu'à la fin
 def exec(formel, mot, affiche = True):
     global vitesse
-    Tur = Machine(formel, mot)
 
+    Tur = Machine(formel, mot)
     etat = formel["qi"]
     os.system("cls")
     while etat != formel["qf"]:
@@ -36,6 +34,8 @@ def exec(formel, mot, affiche = True):
     #for rubans in Tur.get_bandes().get_list():
      #   sys.stdout.write("".join(map(str, rubans["mot"])) + "\n")
 
+
+# Affiche les rubans à chaques étapes. Elle s'adapte à la taille du terminal sur lequel le programme est éxécuté.
 def affichage(tur):
     global TailleTerminal
     bandes = tur.get_bandes().get_list()
@@ -61,7 +61,11 @@ def affichage(tur):
         sys.stdout.write("-".join(map(str, pointeur)) + "\n")
     print("\n")
 
-def interface():
+# Lance une interface minimale dans le terminal permettant de choisir:
+# - la vitesse d'éxécution
+# - le fichier contenant le code la machine de turing
+# - un mot à traiter
+def interface_exec():
     global vitesse
     root = Tk()
     root.withdraw()
@@ -78,17 +82,36 @@ def interface():
 
     re = input("Voulez-vous utiliser une autre machine?o/n\n")
     if re == "o" or re == "O":
-        interface()
+        interface_exec()
+
+def interface_linker():
+    pass
 
 if __name__ == "__main__":
+    os.system("cls")
     # Détermine la taille du terminal pour adapter l'affichage
     size = os.get_terminal_size()
     TailleTerminal = size.columns
     if TailleTerminal < 20:
         print("La fenêtre est trop petite pour afficher correctement les rubans")
     else:
-        # Fenêtre pour choisir un fichier
-        interface()
+        # choix interface pour executer ou pour fusionner deux machines appelant et appelé
+        while True:
+            rep = input("Utiliser le linker: L\nExécutez une machine: E\nQuitter: Q\n")
+            if rep == "E":
+                os.system("cls")
+                sys.stdout.write("Vous avez choisie l'éxécution d'une machine !\n")
+                interface_exec()
+                os.system("cls")
+            elif rep == "L":
+                os.system("cls")
+                sys.stdout.write("Vous avez choisie d'utiliser le linker pour deux machine !\n")
+                interface_linker()
+                os.system("cls")
+            elif rep == "Q":
+                os.system("cls")
+                sys.stdout.write("Aurevoir...")
+                exit()
 
             
 
