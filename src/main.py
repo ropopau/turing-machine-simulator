@@ -5,6 +5,7 @@ import os
 import time
 from tkinter import Tk, filedialog
 
+
 def un_pas(formel, mot):
     Tur = Machine(formel, mot)
 
@@ -15,6 +16,7 @@ def un_pas(formel, mot):
     print(etat)
 
 def exec(formel, mot, affiche = True):
+    global vitesse
     Tur = Machine(formel, mot)
 
     etat = formel["qi"]
@@ -25,28 +27,29 @@ def exec(formel, mot, affiche = True):
         if affiche:
             print(etat)
             affichage(Tur)
-            time.sleep(0.2)
+            time.sleep(vitesse)
             os.system("cls")
         if etat == "Non accepté":
             break
     print("Etat: ", etat)
     affichage(Tur)
-
+    #for rubans in Tur.get_bandes().get_list():
+     #   sys.stdout.write("".join(map(str, rubans["mot"])) + "\n")
 
 def affichage(tur):
     global TailleTerminal
     bandes = tur.get_bandes().get_list()
     for elem in bandes:
-        pointeur = ["---" if _ != (TailleTerminal // 5) // 2 else " ^ " for _  in range(TailleTerminal // 5)]
-        ruban = [" - " for _  in range(TailleTerminal // 5)]
+        pointeur = ["---" if _ != (TailleTerminal // 4) // 2 else " ^ " for _  in range(TailleTerminal // 4)]
+        ruban = [" - " for _  in range(TailleTerminal // 4) ]
         indice = 1
         for lettre in elem["mot"]:
-            ind = (TailleTerminal // 10) - elem["pos"] + indice - 1
+            ind = (TailleTerminal // 8) - elem["pos"] + indice - 1
             #
             if ind < 0:
                 ind = 0
-            elif ind > TailleTerminal // 5 - 1:
-                ind = TailleTerminal // 5 - 1
+            elif ind > TailleTerminal // 4 - 1:
+                ind = TailleTerminal // 4 - 1
             #
             if lettre == "#" or lettre == "+":
                 lettre = "-"
@@ -60,17 +63,25 @@ def affichage(tur):
 
 
 
+
 if __name__ == "__main__":
-    #formel = CodeTuring("turs\\TRI_BINAIRE.tur").get_auto()
-    #exec(formel, "~10#11#11#00#01#11#00#11#11#00#01#11#00~")
+    # Détermine la taille du terminal pour adapter l'affichage
     size = os.get_terminal_size()
     TailleTerminal = size.columns
+    if TailleTerminal < 20:
+        print("La fenêtre est trop petite pour afficher correctement les rubans")
+    else:
+        # Fenêtre pour choisir un fichier
+        root = Tk()
+        root.withdraw()
+        root.attributes('-topmost', True)
+        open_file = filedialog.askopenfilename(filetypes=[("Turing code", ".tur")])
+        # Choisie le mot
+        mot = input("Choisissez un mot. Les cases vides sont représentées par '#'..\n")
 
-    root = Tk()
-    root.withdraw()
-
-    root.attributes('-topmost', True)
-    open_file = filedialog.askopenfilename(filetypes=[("Turing code", ".tur")])
-    formel = CodeTuring(open_file).get_auto()
-    exec(formel, "~10#11#11#00#01#11#00#11#11#00#01#11#00~")
+        # Choisie la vitesse
+        vitesse = float(input("Choisissez une vitesse entre 0 et 5(temps d'attente en seconde)\n"))
+        # ~10#11#11#00~
+        formel = CodeTuring(open_file).get_auto()
+        exec(formel, mot)
 
