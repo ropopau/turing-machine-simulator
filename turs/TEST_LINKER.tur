@@ -1,0 +1,16 @@
+&name: Test
+&init: q0
+&accept: qAccept
+&nbr: 2
+
+q0,1,#
+q0,0,#,>,>
+
+q0,0,#
+q0,0,#,>,>
+
+q0,2,#
+q0,COPY12
+
+q0,#,#
+qAccept,#,#,-,-
