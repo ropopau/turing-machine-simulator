@@ -61,8 +61,24 @@ def affichage(tur):
         sys.stdout.write("-".join(map(str, pointeur)) + "\n")
     print("\n")
 
+def interface():
+    global vitesse
+    root = Tk()
+    root.withdraw()
+    root.attributes('-topmost', True)
+    open_file = filedialog.askopenfilename(filetypes=[("Turing code", ".tur")])
+    # Choisie le mot
+    mot = input("Choisissez un mot. Les cases vides sont représentées par '#'..\n")
 
+    # Choisie la vitesse
+    vitesse = float(input("Choisissez une vitesse entre 0 et 5(temps d'attente en seconde)\n"))
+    # ~10#11#11#00~
+    formel = CodeTuring(open_file).get_auto()
+    exec(formel, mot)
 
+    re = input("Voulez-vous utiliser une autre machine?o/n\n")
+    if re == "o" or re == "O":
+        interface()
 
 if __name__ == "__main__":
     # Détermine la taille du terminal pour adapter l'affichage
@@ -72,16 +88,7 @@ if __name__ == "__main__":
         print("La fenêtre est trop petite pour afficher correctement les rubans")
     else:
         # Fenêtre pour choisir un fichier
-        root = Tk()
-        root.withdraw()
-        root.attributes('-topmost', True)
-        open_file = filedialog.askopenfilename(filetypes=[("Turing code", ".tur")])
-        # Choisie le mot
-        mot = input("Choisissez un mot. Les cases vides sont représentées par '#'..\n")
+        interface()
 
-        # Choisie la vitesse
-        vitesse = float(input("Choisissez une vitesse entre 0 et 5(temps d'attente en seconde)\n"))
-        # ~10#11#11#00~
-        formel = CodeTuring(open_file).get_auto()
-        exec(formel, mot)
+            
 
