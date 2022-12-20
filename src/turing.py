@@ -1,6 +1,7 @@
-from reader import *
-
-
+import time
+from copy import *
+import sys
+import os
 class Bandes(object):
      # Initie une bande avec nbr nombre de rubans
     def __init__(self, nbr, mot):
@@ -64,25 +65,56 @@ class Machine(object):
             if a == "+":
                 a = "#"
             self.__pile.append(a)
-        
-        if tuple(self.__pile) in list(self.get_dico()[self.__etatActu]):
+
+        lu_actu = list(self.get_dico()[self.__etatActu].keys())
+        a = tuple(["%" for _ in range(self.get_nbrRub())])
+
+        for lu in lu_actu:
+
+            if list(lu).count("*")  == 1 :
+                
+                for indice in range(len(lu)):
+                    if lu[indice] == "*":
+                        lettre_etoile = self.__pile[indice]
+                if lettre_etoile == "#":
+                    break
+                info = deepcopy(self.get_dico()[self.__etatActu][lu])
+                ch = list(info["change"])
+                for i in range(len(ch)):
+                    if ch[i] == "*":
+                        ch[i] = lettre_etoile
+                info["change"] = ch
+                self.get_dico()[self.__etatActu][tuple(self.__pile)] = info
+                lu_actu.append(tuple(self.__pile))
+
+        print(self.__pile, lu_actu)
+
+        # Il ne peut pas avoir plus de deux étoile par transitions: Une étoile = Un caractère appartenant a l'alphabet.
+        if tuple(self.__pile) in lu_actu or a in lu_actu:
+            if a in lu_actu:
+                pile_temp = a
+                nvllettres = tuple(self.__pile)
+                nvlmvts = self.get_dico()[self.__etatActu][a]["mvt"]
             # Si il est présent alors cela veut dire qu'il existe une transition pour ces lettres
             # On détermine alors les nvl lettres et mouvements
-            nvllettres = self.get_dico()[self.__etatActu][tuple(self.__pile)]["change"]
-            nvlmvts = self.get_dico()[self.__etatActu][tuple(self.__pile)]["mvt"]
+            else:
+                pile_temp = tuple(self.__pile)
+                nvllettres = self.get_dico()[self.__etatActu][tuple(self.__pile)]["change"]
+                nvlmvts = self.get_dico()[self.__etatActu][tuple(self.__pile)]["mvt"]
             # Pour toute les bandes, 
             for i in range(len(self.__pile)):
                 listrub = self.get_bandes()
-                listrub.set_lettre(i, nvllettres[i])
+                if tuple(nvllettres) != tuple(["%" for _ in range(self.get_nbrRub())]):
+                    listrub.set_lettre(i, nvllettres[i])
                 listrub.set_pos(i, nvlmvts[i])
             # Changement de l'état actuel
-            self.__etatActu = self.get_dico()[self.__etatActu][tuple(self.__pile)]["dest"]
+            self.__etatActu = self.get_dico()[self.__etatActu][pile_temp]["dest"]
         else:
             self.__etatActu = "Non accepté"
         # On vide la pile pour l'itération suivante
         self.__pile.clear()
 
-
+    
     # Getters et setters
     def get_etatActu(self):
         return self.__etatActu
@@ -111,8 +143,59 @@ class Machine(object):
     def get_nbrRub(self):
         return self.__formel["nbr"]
 
+# Effectue un pas sans afficher les rubans
+def un_pas(formel, mot):
+    Tur = Machine(formel, mot)
+    _etat = formel["qi"]
+    Tur.pas()
+    _etat = Tur.get_etatActu()
+
+# Exécute la machine jusqu'à la fin
+def exec(formel, mot, vitesse, tailleterm, affiche = True):
+    global taillet
+    taillet = tailleterm
+    Tur = Machine(formel, mot)
+    etat = formel["qi"]
+    os.system("cls")
+    affichage(Tur)
+    while etat != formel["qf"]:
+        Tur.pas()
+        etat = Tur.get_etatActu()
+        if affiche:   
+            print(etat)
+            affichage(Tur)
+            time.sleep(vitesse)
+            os.system("cls")
+        if etat == "Non accepté":
+            break
+    print("Etat: ", etat)
+    affichage(Tur)
+
+# Affiche les rubans à chaques étapes. Elle s'adapte à la taille du terminal sur lequel le programme est éxécuté.
+def affichage(tur):
+    global taillet
+    bandes = tur.get_bandes().get_list()
+    for elem in bandes:
+        pointeur = ["---" if _ != (taillet // 4) // 2 else " ^ " for _  in range(taillet // 4)]
+        ruban = [" - " for _  in range(taillet // 4) ]
+        indice = 1
+        for lettre in elem["mot"]:
+            ind = (taillet // 8) - elem["pos"] + indice - 1
+            if ind < 0:
+                ind = 0
+            elif ind > taillet // 4 - 1:
+                ind = taillet // 4 - 1
+            if lettre == "#" or lettre == "+":
+                lettre = "-"
+            ruban[ind] = " " + lettre + " "
+            indice += 1
+        sys.stdout.write("/".join(map(str, ruban)) + "\n")
+        sys.stdout.write("-".join(map(str, pointeur)) + "\n")
+    print("\n")
+
 
 if __name__ == "__main__":
+    import reader
     # Machine de turing en écriture formel
     """
     Si = ['a', 'b']
@@ -144,12 +227,11 @@ if __name__ == "__main__":
     nbr = 2
     # Rassemblé
     #Tur = {"Si": Si, "Ga": Ga, "Qe": Qe, "qi": qi, "qf": qf, "dico": Dedico, "nbr": nbr}
-    Tur = CodeTuring("turs\\TRI_BINAIRE.tur").get_auto()    ## Racine du projet + ...
+    Tur = reader("turs\\COPY12.tur")    ## Racine du projet + ...
 
-    Mac = Machine(Tur, "~10#11#11#00~")
+    Mac = Machine(Tur, "10011")
 
     etat = Tur["qi"]
-
     while etat != Tur["qf"]:
         Mac.pas()
         etat = Mac.get_etatActu()
