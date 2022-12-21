@@ -1,0 +1,37 @@
+&name: Test optimisation
+&init: qCopy
+&accept: qAccept
+&nbr: 2
+
+qCopy,0,#
+qCopy,0,0,>,>
+
+qCopy,1,#
+qCopy,1,1,>,>
+
+qCopy,#,#
+qiCopy,#,#,-,-
+
+qiCopy,#,#
+qReturn,#,#,-,<
+
+qReturn,#,0
+qReturn,#,0,-,<
+
+qReturn,#,1
+qReturn,#,1,-,<
+
+qReturn,#,#
+qiReturn,#,#,-,-
+
+qiReturn,#,#
+qTest,#,#,<,>
+
+qTest,0,0
+qTest,0,0,<,>
+
+qTest,1,1
+qTest,1,1,<,>
+
+qTest,#,#
+qAccept,#,#,-,-

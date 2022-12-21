@@ -1,0 +1,14 @@
+&name: Test 
+&init: q1
+&accept: qAccept
+&nbr: 4
+
+q1,0,#
+q1,0,0,>,>
+
+q1,1,#
+q1,1,1,>,>
+
+q1,#,#
+qAccept,#,#,-,-
+

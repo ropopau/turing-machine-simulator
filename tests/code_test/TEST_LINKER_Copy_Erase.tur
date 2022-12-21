@@ -9,8 +9,11 @@ q0,0,#,>,>
 q0,0,#
 q0,1,#,>,>
 
+q0,3,#
+q0,ERASE,None,>,>
+
 q0,2,#
-q0,LEFT,None,<,<
+q0,COPY12,None,>,>
 
 q0,#,#
 qAccept,#,#,-,-
