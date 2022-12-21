@@ -20,7 +20,7 @@ if __name__ == "__main__":
                 os.system("cls")
                 sys.stdout.write("Vous avez choisie d'utiliser le linker pour deux machine !\n")
                 interface_l()
-                #os.system("cls")
+                os.system("cls")
             case "O" | "o":
                 os.system("cls")
                 sys.stdout.write("Vous avez choisie l'optimisation d'une machine !\n")

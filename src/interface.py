@@ -30,28 +30,10 @@ def interface_e():
 
 def interface_l():
     open_file = choix_fichier()
-    form = reader(open_file)
-    auto = marqueur(form, "MAIN")
-    listappel = []
-    for etat, sousdic in auto["dico"].items():
-        for lu, info in sousdic.items():
-            if type(info["change"]) != tuple:
-                listappel.append({"etat": etat, "lu": lu, "appel": info["change"], "dest": info["dest"], "mvt": info["mvt"]})
-    if not listappel:
-        print("La machine n'appelle aucune machine")
-        exit()
-    else:
-        a = listdir("turs")
-        possible = True
-        for elem in listappel:
-            if elem["appel"]+".tur" not in a:
-                print("Il n'existe pas de fichier correspondant à la machine appelée: ",elem["appel"]," dans le répertoire")
-                possible = False     
-        if possible:
-            a = link(auto, listappel)
-            writer(a)
-        else:
-            print("Veuillez ajouter les fichiers *.tur nécessaire pour utiliser le linker.")
+    form_b = reader(open_file)
+    res = linker(form_b)
+
+    writer(res)
 
 
 def interface_o():

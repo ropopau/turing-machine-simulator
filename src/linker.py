@@ -1,5 +1,30 @@
 from reader import *
 from modifier import *
+from os import listdir
+
+def linker(form_b):
+    form = marqueur(form_b, "MAIN")
+    listappel = []
+    for etat, sousdic in form["dico"].items():
+        for lu, info in sousdic.items():
+            if type(info["change"]) != tuple:
+                listappel.append({"etat": etat, "lu": lu, "appel": info["change"], "dest": info["dest"], "mvt": info["mvt"]})
+    if not listappel:
+        print("La machine n'appelle aucune machine\n")
+        return 0
+    else:
+        a = listdir("turs")
+        possible = True
+        for elem in listappel:
+            if elem["appel"]+".tur" not in a:
+                print("Il n'existe pas de fichier correspondant à la machine appelée: ",elem["appel"]," dans le répertoire\n")
+                possible = False     
+                return 1
+        if possible:
+            a = link(form, listappel)
+            return a
+        else:
+            print("Veuillez ajouter les fichiers *.tur nécessaire pour utiliser le linker.\n")
 
 def link(d, l):
     # Pour tout les appelées

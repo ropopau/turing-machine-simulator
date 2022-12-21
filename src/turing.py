@@ -37,6 +37,9 @@ class Bandes(object):
     
     def get_mot(self, quelRuban):
         return self.__listRubans[quelRuban]["mot"]
+    
+    def get_mot_str(self, quelRuban):
+        return "".join(map(str, self.get_mot(quelRuban))).strip("+").strip("#")
 
     def set_lettre(self, quelRuban, lettre):
         rub = self.__listRubans[quelRuban]
@@ -44,11 +47,10 @@ class Bandes(object):
 
     def set_pos(self, quelRuban, mvt):
         if mvt == "<":
-            self.verification()
             self.__listRubans[quelRuban]["pos"] -= 1
         elif mvt == ">":
-            self.verification()
             self.__listRubans[quelRuban]["pos"] += 1
+        
 
 class Machine(object):
     def __init__(self, formel, mot):
@@ -59,9 +61,12 @@ class Machine(object):
         self.__pile = []
 
     def pas(self):
+        self.__bandes.verification()
+        
         ## Récupérations des lettres lu à l'état actuel
         for ruban in self.__bandes.get_list():
             a = ruban["mot"][ruban["pos"]]
+            
             if a == "+":
                 a = "#"
             self.__pile.append(a)
@@ -87,8 +92,6 @@ class Machine(object):
                 self.get_dico()[self.__etatActu][tuple(self.__pile)] = info
                 lu_actu.append(tuple(self.__pile))
 
-        print(self.__pile, lu_actu)
-
         # Il ne peut pas avoir plus de deux étoile par transitions: Une étoile = Un caractère appartenant a l'alphabet.
         if tuple(self.__pile) in lu_actu or a in lu_actu:
             if a in lu_actu:
@@ -106,6 +109,7 @@ class Machine(object):
                 listrub = self.get_bandes()
                 if tuple(nvllettres) != tuple(["%" for _ in range(self.get_nbrRub())]):
                     listrub.set_lettre(i, nvllettres[i])
+                #print(listrub.get_mot(0))
                 listrub.set_pos(i, nvlmvts[i])
             # Changement de l'état actuel
             self.__etatActu = self.get_dico()[self.__etatActu][pile_temp]["dest"]
@@ -149,15 +153,17 @@ def un_pas(formel, mot):
     _etat = formel["qi"]
     Tur.pas()
     _etat = Tur.get_etatActu()
-
+    return Tur
+    
 # Exécute la machine jusqu'à la fin
 def exec(formel, mot, vitesse, tailleterm, affiche = True):
     global taillet
     taillet = tailleterm
     Tur = Machine(formel, mot)
     etat = formel["qi"]
-    os.system("cls")
-    affichage(Tur)
+    if affiche:
+        os.system("cls")
+        affichage(Tur)
     while etat != formel["qf"]:
         Tur.pas()
         etat = Tur.get_etatActu()
@@ -168,8 +174,10 @@ def exec(formel, mot, vitesse, tailleterm, affiche = True):
             os.system("cls")
         if etat == "Non accepté":
             break
-    print("Etat: ", etat)
-    affichage(Tur)
+    if affiche:
+        print("Etat: ", etat)
+        affichage(Tur)
+    return Tur
 
 # Affiche les rubans à chaques étapes. Elle s'adapte à la taille du terminal sur lequel le programme est éxécuté.
 def affichage(tur):
