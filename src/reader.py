@@ -1,6 +1,4 @@
 import os
-# erreur: 100 = erreur entete, 101 = transition doublons, 102 = erreur de syntaxe dans les transitions.
-#         103 = Nombre de ruban incorrect
 
 # Demande le nom de la machine jusqu'à ce qu'il soit valide.
 def demandenom():

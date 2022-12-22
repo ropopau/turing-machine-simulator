@@ -2,6 +2,7 @@ import time
 from copy import *
 import sys
 import os
+
 class Bandes(object):
      # Initie une bande avec nbr nombre de rubans
     def __init__(self, nbr, mot):
