@@ -23,7 +23,7 @@ class TestLinker(unittest.TestCase):
                                         ('0', '#'): {'dest': 'qINIT', 'change': ('1', '#'), 'mvt': ('>', '>')}, 
                                         ('2', '#'): {'dest': 'qCopy', 'change': ('%', '%'), 'mvt': ('>', '>')}, 
                                         ('#', '#'): {'dest': 'qACCEPT', 'change': ('#', '#'), 'mvt': ('-', '-')}}, 
-                            'qACCCopy': {('%', '%'): {'dest': 'qINIT', 'change': ('%', '%'), 'mvt': ('-', '-')}}, 
+                            'qACCCopy': {('%', '%'): {'dest': 'qINIT', 'change': ('%', '%'), 'mvt': ('>', '>')}}, 
                             'qCopy': {('*', '#'): {'dest': 'qCopy', 'change': ('*', '*'), 'mvt': ('>', '>')}, 
                                     ('#', '#'): {'dest': 'qACCCopy', 'change': ('#', '#'), 'mvt': ('-', '-')}}}, 'nbr': 2}
 
@@ -32,7 +32,6 @@ class TestLinker(unittest.TestCase):
         self.assertEqual(ex1.get_bandes().get_list(), ex2.get_bandes().get_list())
     
     def test_deux_appels(self):
-        self.maxDiff = None
         r = reader.reader("tests\\code_test\\TEST_LINKER_Copy_Erase.tur")
         res = linker.linker(r)
         eq_res = {'Si': ['0', '1', '3', '2'], 
@@ -53,6 +52,7 @@ class TestLinker(unittest.TestCase):
                                         ('#', '#'): {'dest': 'qAccErase', 'change': ('#', '#'), 'mvt': ('-', '-')}}}, 'nbr': 2}
         ex1 = turing.exec(res, "132031", 0, 20, False)
         ex2 = turing.exec(eq_res, "132031",0, 20, False)
+
         self.assertEqual(ex1.get_bandes().get_list(), ex2.get_bandes().get_list())
 
 if __name__ == '__main__':

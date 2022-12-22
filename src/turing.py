@@ -8,13 +8,14 @@ class Bandes(object):
         self.__listRubans = [{"mot": ["#" for _ in range (len(mot))], "pos":0} for _ in range (nbr)]
         self.__listRubans[0]["mot"] = list(mot)
 
+    # Vérifie qu'il y a au moins une case vide avant et après la position actuelle
     def verification(self):
         for elem in self.__listRubans:
             if elem["pos"] == 0:
                 self.ajoute_debut()
             elif elem["pos"] == len(elem["mot"]):
                 self.ajoute_fin()
-            
+    # Ajoute une case vide au debut et a la fin
     def ajoute_debut(self):
         for elem in self.__listRubans:
             if elem["mot"][0] == "+":
@@ -54,12 +55,17 @@ class Bandes(object):
 
 class Machine(object):
     def __init__(self, formel, mot):
+        # Ecriture formelle de la machine
         self.__formel = formel
+        # Objet bande qui contient toute les bandes d'une machine
         self.__bandes = Bandes(formel["nbr"], mot)
-
+        # l'état actuelle
         self.__etatActu = self.__formel["qi"]
+        # Pile qui sera utilisé lors de la lecture des lettres:
+        # elle se remplie puis se vide à chaque transition
         self.__pile = []
 
+    # Un pas de la machine. 
     def pas(self):
         self.__bandes.verification()
         
@@ -71,13 +77,13 @@ class Machine(object):
                 a = "#"
             self.__pile.append(a)
 
+        # Etat dont une transition s'en suit
         lu_actu = list(self.get_dico()[self.__etatActu].keys())
         a = tuple(["%" for _ in range(self.get_nbrRub())])
 
+        # Pour les transitions etoile
         for lu in lu_actu:
-
             if list(lu).count("*")  == 1 :
-                
                 for indice in range(len(lu)):
                     if lu[indice] == "*":
                         lettre_etoile = self.__pile[indice]
@@ -91,7 +97,10 @@ class Machine(object):
                 info["change"] = ch
                 self.get_dico()[self.__etatActu][tuple(self.__pile)] = info
                 lu_actu.append(tuple(self.__pile))
-
+            elif list(lu).count("*") > 1:
+                print("il y a trop plus d'un carcatère étoile.")
+                quit()
+        
         # Il ne peut pas avoir plus de deux étoile par transitions: Une étoile = Un caractère appartenant a l'alphabet.
         if tuple(self.__pile) in lu_actu or a in lu_actu:
             if a in lu_actu:
@@ -200,50 +209,3 @@ def affichage(tur):
         sys.stdout.write("/".join(map(str, ruban)) + "\n")
         sys.stdout.write("-".join(map(str, pointeur)) + "\n")
     print("\n")
-
-
-if __name__ == "__main__":
-    import reader
-    # Machine de turing en écriture formel
-    """
-    Si = ['a', 'b']
-    Ga = ['a', 'b', '#']
-    Qe = ["I", "F"]
-    qi = "I"
-    qf = "F"
-    Dedico = {"I": {("a",): {"dest": "I", "change": ("b",), "mvt": (">",)}, 
-                    ("b",): {"dest": "I", "change": ("a",), "mvt": (">",)},
-                    ("#",): {"dest": "F", "change": ("#",), "mvt": ("-",)}}}
-    nbr = 1
-    """
-    Si = [1, 0]
-    Ga = [1, 0, "#"]
-    Qe = ["cop", "ret", "tes", "F"]
-    qi = "cop"
-    qf = "F"
-    Dedico = {"cop": {("0", "#",): {"dest": "cop", "change": ("0", "0",), "mvt": (">", ">",)}, 
-                    ("1", "#",): {"dest": "cop", "change": ("1", "1",), "mvt": (">", ">",)},
-                    ("#", "#",): {"dest": "ret", "change": ("#", "#",), "mvt": ("-", "<",)}},
-
-                "ret": {("#", "0",): {"dest": "ret", "change": ("#", "0",), "mvt": ("-", "<",)}, 
-                    ("#", "1",): {"dest": "ret", "change": ("#", "1",), "mvt": ("-", "<",)},
-                    ("#", "#",): {"dest": "tes", "change": ("#", "#",), "mvt": ("<", ">",)}},
-
-                "tes": {("0", "0",): {"dest": "tes", "change": ("0", "0",), "mvt": ("<", ">",)}, 
-                    ("1", "1",): {"dest": "tes", "change": ("1", "1",), "mvt": ("<", ">",)},
-                    ("#", "#",): {"dest": "F", "change": ("#", "#",), "mvt": ("-", "-",)}}}
-    nbr = 2
-    # Rassemblé
-    #Tur = {"Si": Si, "Ga": Ga, "Qe": Qe, "qi": qi, "qf": qf, "dico": Dedico, "nbr": nbr}
-    Tur = reader("turs\\COPY12.tur")    ## Racine du projet + ...
-
-    Mac = Machine(Tur, "10011")
-
-    etat = Tur["qi"]
-    while etat != Tur["qf"]:
-        Mac.pas()
-        etat = Mac.get_etatActu()
-        print(etat)
-        if etat == "Non accepté":
-            break
-

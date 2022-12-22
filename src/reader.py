@@ -1,18 +1,36 @@
 import os
 # erreur: 100 = erreur entete, 101 = transition doublons, 102 = erreur de syntaxe dans les transitions.
 #         103 = Nombre de ruban incorrect
-def writer(tur):
-    fichier = input("Choisissez un nom de fichier.\n")
-    if os.path.exists("turs\\"+fichier+".tur"):
-        rep = input("Un fichier de ce nom existe déjà. Voulez-vous le supprimer?o/*\n")
-        if rep == "O" or rep == "o":
-            os.remove("turs\\"+fichier+".tur")
-            nom = input("Choisissez un nom pour la machine de turing.\n")
+
+# Demande le nom de la machine jusqu'à ce qu'il soit valide.
+def demandenom():
+    while True:
+        nom = input("Choisissez un NOM pour la MACHINE DE TURING.\n")
+        if nom.strip() == "":
+            print("Veuillez entrer un nom valide.")
         else:
-            writer(tur)
-    else:
-        nom = input("Choisissez un nom pour la machine de turing.\n")  
-    pathee = os.path.join("turs", fichier+".tur")
+            return nom
+
+# Demande le nom du fichier jusqu'à ce qu'il soit valide.
+def demandefichier():
+    while True:
+        fichier = input("Choisissez un NOM de FICHIER.\n")
+        if fichier.strip() == "":
+            print("Veuillez entrer un nom valide.")
+        else:
+            if os.path.exists("turs\\"+fichier+".tur"):
+                rep = input("Un FICHIER de ce nom existe déjà. Voulez-vous le supprimer?o/*\n")
+                if rep == "O" or rep == "o":
+                    os.remove("turs\\"+fichier+".tur")
+                    return fichier
+            else:
+                return fichier
+        
+# Crée un fichier .tur avec les informations de la variable tur.
+def writer(tur):
+    fichier = demandefichier()
+    nom = demandenom()
+    pathee = os.path.join("turs", fichier + ".tur")
     with open(pathee, "a") as f:
         f.write("&name: "+nom+"\n")
         f.write("&init: "+tur["qi"]+"\n")
@@ -32,6 +50,7 @@ def writer(tur):
                 f.write(l1+"\n"+l2+"\n")
                 f.write("\n")
                 
+# Lit un fichier .tur et renvoie la définition formel de la machine sous forme de dictionnaire.
 def reader(fichier):
     Si = [] # ok
     Ga = [] # ok
@@ -70,16 +89,15 @@ def reader(fichier):
                 ind += 1
         ind += 1
     if None in [nom, qi, qf, nbr]:
-        print("Il manque des informations // erreurs de syntaxe dans l'entête.")
         return 100
     
     return {"Si":Si, "Ga":Ga, "Qe":Qe, "qi": qi, "qf": qf, "dico": Dedico, "nbr": nbr}
 
+# lit les transitions pour les en déduire l'alphabet, l'alphabet de travaille, les états, le nombre de ruban ainsi que le dictionnaire des transitions.
 def read_transi(b, ind, Si, Ga, Qe, Dedico, nbr):
     temp = b[ind].split(",") # Premiere ligne
     temp2 = b[ind + 1].split(",") # Deuxieme ligne
     if "" in temp or "" in temp2:
-        print("Il y a une erreur de syntaxe dans une transition.")
         return 102
 
     # Ajout des etats
@@ -138,7 +156,6 @@ def read_transi(b, ind, Si, Ga, Qe, Dedico, nbr):
             Dedico[etat][lu] = sous_dico
         # Sinon, si cette liste de caractère lu est déjà présente, alors on lève une erreur
         else:
-            print("une transition est écrite deux fois")
             return 101
     else:
         # on considère que l'état possède déjà sa place dans le dictionnaire des transitions
@@ -146,7 +163,6 @@ def read_transi(b, ind, Si, Ga, Qe, Dedico, nbr):
         if lu not in Dedico[etat].keys():
             Dedico[etat][lu] = sous_dico
         else:
-            print("une transition est écrite deux fois")
             return 101
 
 
