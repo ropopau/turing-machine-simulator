@@ -38,6 +38,6 @@
  * Les fichiers contenant le code d'une machine de turing ont l'extensions ".tur" pour une question de facilité d'utilisation.
  * Un fichier possède une entête avec toute les informations. Ces informations sont toute les lignes commençant par "&".
  * Les transitions reprennent la syntaxe du site turingmachinesimulator.com.
- * Les machines de turing basique comme retour à droite, retour à droite etc, sont situés dans le dossier ./turs. Lors de l'utilisation du linker, le programme cherchera les machines appelantes dans ce dossier.
+ * Les machines de turing basique comme retour à droite, retour à droite etc, sont situés dans le dossier ./turs. Lors de l'utilisation du linker, le programme cherchera les machines appelées dans ce dossier.
  
     
