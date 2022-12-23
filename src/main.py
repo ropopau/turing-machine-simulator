@@ -8,7 +8,7 @@ exception = {0: "La machine n'appelle aucune machine.\n",
             100: "Erreur de syntaxe dans l'entête.\n", 
             101: "Une transition est présente plus qu'une fois.\n", 
             102: "Erreur de syntaxe dans une transitions.\n",
-            103: "Nombre de ruban incorrect",
+            103: "Nombre de ruban incorrect.\n",
             105: "Il y un appel de machine. Utilisez d'abord le linker pour éxécuter cette machine.\n",
             7: "Il y a un appel de machine. Veuillez utiliser le linker avant d'utiliser cette fonctionnalité.\n"
             }
