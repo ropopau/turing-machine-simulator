@@ -1,0 +1,26 @@
+&name: Capipi
+&init: q0MAIN
+&accept: qAcceptMAIN
+&nbr: 2
+
+q0MAIN,1,#
+q0MAIN,0,#,>,>
+
+q0MAIN,0,#
+q0MAIN,1,#,>,>
+
+q0MAIN,2,#
+q00,2,#,>,>
+
+q0MAIN,#,#
+qAcceptMAIN,#,#,-,-
+
+qAccept0,%,%
+q0MAIN,%,%,-,-
+
+q00,*,#
+q00,*,*,>,>
+
+q00,#,#
+qAccept0,#,#,>,>
+
