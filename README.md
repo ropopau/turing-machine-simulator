@@ -1,6 +1,6 @@
 # SIMULATEUR D'UNE MACHINE DE TURING
 ## Utilisation
- * Le makefile peut ne pas fonctionner si vous avez une ver
+ * Le makefile peut ne pas fonctionner si vous avez une version de python inférieur a 3.10. En effet nous avons rencontré quelques soucis de commande: Sur ubuntu, nous devions utiliser la commande 'python3.10 fichier.py' et sur windows, 'python fichier.py'. Notre fichier lance la commande 'python fichier.py'.
  * Si vous êtes sur linux, utilisez la commande make. 
  * Sinon vous pouvez l'exécuter manuellement à partir du dossier racine "TDL".
  *
