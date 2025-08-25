@@ -1,3 +1,5 @@
+import os
+                
 # Lit un fichier .tur et renvoie la définition formel de la machine sous forme de dictionnaire.
 def reader(fichier):
     Si = [] # ok
@@ -31,7 +33,7 @@ def reader(fichier):
         else:
             if type(nbr) == int and nbr >= 1:
 
-                res = __read_transi(b, ind, Si, Ga, Qe, Dedico, nbr)
+                res = read_transi(b, ind, Si, Ga, Qe, Dedico, nbr)
                 if res in [101, 102, 103]:
                     return res
                 ind += 1
@@ -42,7 +44,7 @@ def reader(fichier):
     return {"Si":Si, "Ga":Ga, "Qe":Qe, "qi": qi, "qf": qf, "dico": Dedico, "nbr": nbr}
 
 # lit les transitions pour les en déduire l'alphabet, l'alphabet de travaille, les états, le nombre de ruban ainsi que le dictionnaire des transitions.
-def __read_transi(b, ind, Si, Ga, Qe, Dedico, nbr):
+def read_transi(b, ind, Si, Ga, Qe, Dedico, nbr):
     temp = b[ind].split(",") # Premiere ligne
     temp2 = b[ind + 1].split(",") # Deuxieme ligne
     if "" in temp or "" in temp2:

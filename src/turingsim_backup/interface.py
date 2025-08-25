@@ -11,7 +11,7 @@ def choix_fichier():
     root.withdraw()
     root.attributes('-topmost', True)
     while True:
-        open_file = filedialog.askopenfilename(filetypes=[("Turing code", ".tur")])
+        open_file = filedialog.askopenfilename(filetypes=[("TuringMachine code", ".tur")])
         if open_file.strip() != "":
             break
         

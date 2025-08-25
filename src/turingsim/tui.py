@@ -4,9 +4,9 @@ from pathlib import Path
 
 
 
-from .turing import exec
-from .reader import reader
-from .utils import clear_screen
+from .core.TuringMachine import TuringMachine
+from .utils.reader import reader
+from .utils.misc import clear_screen
 
 
 class TUI():
@@ -25,10 +25,27 @@ class TUI():
             else:
                 print("{0} is not found or is not a directory.".format(directory))
 
+
+    def home_or_exit(self):
+        print("=========================================================")
+        print("| (1): Return to home menu | (2): Exit the simulator :( |")
+        print("=========================================================")
+
+        rep: str = input("Choose an option by its index -> ")
+        match rep:
+            case "1":
+                self.show_home()
+            case "2":
+                exit()
+
+
     @clear_screen
     def show_home(self):
-        print("Use machine: 1\nLink machines: 2\nOptimize machine: 3\nExit: 4\n")
-        rep: str = input("Choose your command: ")
+        print("============================================================================")
+        print("| (1): Use machine | (2): Link machine | (3): Optimize machine | (4): Exit |")
+        print("============================================================================")
+
+        rep: str = input("Choose an option by its index -> ")
         match rep:
             case "1":
                 self.show_exec()
@@ -45,14 +62,15 @@ class TUI():
         for ind, path in enumerate(self.machines_abs_path):
             print("({0}): {1}".format(ind, path))
 
-        print("Choose a turing machine to execute (By its index)")
+        print("Choose a turing machine to execute by its index)")
         while True:
             try:
                 res: int = int(input("-> "))
                 formel = reader(self.machines_abs_path[res])
                 print(formel)
-                exec(formel, "1001", 2, self.TailleTerminal)
-                return
+                tur: TuringMachine = TuringMachine(formel)
+                tur.exec("1001", 1, self.TailleTerminal)
+                self.home_or_exit()
             except (IndexError, ValueError):
                 print("You must choose an integer AND in the range of indexes shown above")
             
@@ -60,9 +78,14 @@ class TUI():
 
     @clear_screen
     def show_linker(self):
-        pass
+        print("Not implemented yet.")
+        self.home_or_exit()
+
+
 
     @clear_screen
     def show_optimizer(self):
-        pass
+        print("Not implemented yet.")
+        self.home_or_exit()
+
 

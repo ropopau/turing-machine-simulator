@@ -1,66 +1,15 @@
 import time
 from copy import *
 import sys
-from .utils import clear_screen
-import os
+from ..utils.misc import clear_screen
+from .Tapes import Tapes
 
-class Bandes(object):
-     # Initie une bande avec nbr nombre de rubans
-    def __init__(self, nbr, mot):
-        self.__listRubans = [{"mot": ["#" for _ in range (len(mot))], "pos":0} for _ in range (nbr)]
-        self.__listRubans[0]["mot"] = list(mot)
-
-    # Vérifie qu'il y a au moins une case vide avant et après la position actuelle
-    def verification(self):
-        for elem in self.__listRubans:
-            if elem["pos"] == 0:
-                self.ajoute_debut()
-            elif elem["pos"] == len(elem["mot"]):
-                self.ajoute_fin()
-    # Ajoute une case vide au debut et a la fin
-    def ajoute_debut(self):
-        for elem in self.__listRubans:
-            if elem["mot"][0] == "+":
-                elem["mot"][0] = "#"
-            elem["mot"].insert(0, "+")
-            elem["pos"] += 1
-    
-    def ajoute_fin(self):
-        for elem in self.__listRubans:
-            if elem["mot"][-1] == "+":
-                elem["mot"][-1] = "#"
-            elem["mot"].append("+")
-
-    # Getters et setters
-    def get_list(self):
-        return self.__listRubans
-
-    def get_pos(self, quelRuban):
-        return self.__listRubans[quelRuban]["pos"]
-    
-    def get_mot(self, quelRuban):
-        return self.__listRubans[quelRuban]["mot"]
-    
-    def get_mot_str(self, quelRuban):
-        return "".join(map(str, self.get_mot(quelRuban))).strip("+").strip("#")
-
-    def set_lettre(self, quelRuban, lettre):
-        rub = self.__listRubans[quelRuban]
-        rub["mot"][rub["pos"]] = lettre
-
-    def set_pos(self, quelRuban, mvt):
-        if mvt == "<":
-            self.__listRubans[quelRuban]["pos"] -= 1
-        elif mvt == ">":
-            self.__listRubans[quelRuban]["pos"] += 1
-        
-
-class Machine(object):
-    def __init__(self, formel, mot):
-        # Ecriture formelle de la machine
+class TuringMachine:
+    def __init__(self, formel):
+        # Ecriture formelle de a machine
         self.__formel = formel
         # Objet bande qui contient toute les bandes d'une machine
-        self.__bandes = Bandes(formel["nbr"], mot)
+        self.__bandes = Tapes()
         # l'état actuelle
         self.__etatActu = self.__formel["qi"]
         # Pile qui sera utilisé lors de la lecture des lettres:
@@ -129,6 +78,9 @@ class Machine(object):
         # On vide la pile pour l'itération suivante
         self.__pile.clear()
 
+    def set_word(self, word: str):
+        self.__bandes.init_word(self.__formel["nbr"], word)
+
     
     # Getters et setters
     def get_etatActu(self):
@@ -157,56 +109,48 @@ class Machine(object):
     
     def get_nbrRub(self):
         return self.__formel["nbr"]
-
-# Effectue un pas sans afficher les rubans
-def un_pas(formel, mot):
-    Tur = Machine(formel, mot)
-    _etat = formel["qi"]
-    Tur.pas()
-    _etat = Tur.get_etatActu()
-    return Tur
     
-# Exécute la machine jusqu'à la fin
-def exec(formel, mot, vitesse, tailleterm, affiche = True):
-    global taillet
-    taillet = tailleterm
-    Tur = Machine(formel, mot)
-    etat = formel["qi"]
-    if affiche:
-        affichage(Tur)
-    while etat != formel["qf"]:
-        Tur.pas()
-        etat = Tur.get_etatActu()
-        if affiche:   
-            print(etat)
-            affichage(Tur)
-            time.sleep(vitesse)
-        if etat == "Non accepté":
-            break
-    if affiche:
-        print("Etat: ", etat)
-        affichage(Tur)
-    return Tur
+    # Exécute la machine jusqu'à la fin
+    def exec(self, mot, vitesse, tailleterm):
+        global taillet
+        taillet = tailleterm
+        self.set_word(mot)
+        etat = self.__formel["qi"]
 
-# Affiche les rubans à chaques étapes. Elle s'adapte à la taille du terminal sur lequel le programme est éxécuté.
-@clear_screen
-def affichage(tur):
-    global taillet
-    bandes = tur.get_bandes().get_list()
-    for elem in bandes:
-        pointeur = ["---" if _ != (taillet // 4) // 2 else " ^ " for _  in range(taillet // 4)]
-        ruban = [" - " for _  in range(taillet // 4) ]
-        indice = 1
-        for lettre in elem["mot"]:
-            ind = (taillet // 8) - elem["pos"] + indice - 1
-            if ind < 0:
-                ind = 0
-            elif ind > taillet // 4 - 1:
-                ind = taillet // 4 - 1
-            if lettre == "#" or lettre == "+":
-                lettre = "-"
-            ruban[ind] = " " + lettre + " "
-            indice += 1
-        sys.stdout.write("/".join(map(str, ruban)) + "\n")
-        sys.stdout.write("-".join(map(str, pointeur)) + "\n")
-    print("\n")
+        self.affichage(etat, vitesse)
+        while etat != self.__formel["qf"]:
+            self.pas()
+            etat = self.get_etatActu()
+
+            print(etat)
+            self.affichage(etat, vitesse)
+            if etat == "Non accepté":
+                break
+        
+        self.affichage(etat, vitesse)
+        
+
+    # Affiche les rubans à chaques étapes. Elle s'adapte à la taille du terminal sur lequel le programme est éxécuté.
+    @clear_screen
+    def affichage(self, state: str = "", speed = 1):
+        global taillet
+        bandes = self.get_bandes().get_list()
+        for elem in bandes:
+            pointeur = ["---" if _ != (taillet // 4) // 2 else " ^ " for _  in range(taillet // 4)]
+            ruban = [" - " for _  in range(taillet // 4) ]
+            indice = 1
+            for lettre in elem["mot"]:
+                ind = (taillet // 8) - elem["pos"] + indice - 1
+                if ind < 0:
+                    ind = 0
+                elif ind > taillet // 4 - 1:
+                    ind = taillet // 4 - 1
+                if lettre == "#" or lettre == "+":
+                    lettre = "-"
+                ruban[ind] = " " + lettre + " "
+                indice += 1
+            sys.stdout.write("/".join(map(str, ruban)) + "\n")
+            sys.stdout.write("-".join(map(str, pointeur)) + "\n")
+        print("\n")
+        print("Etat: {0}".format(state))
+        time.sleep(speed)
