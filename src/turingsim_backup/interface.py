@@ -1,4 +1,3 @@
-from tkinter import Tk, filedialog
 from reader import *
 from modifier import *
 from linker import *

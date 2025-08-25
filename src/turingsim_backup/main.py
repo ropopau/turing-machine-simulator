@@ -1,6 +1,6 @@
 import os
 import sys
-from interface import *
+from turingsim.interface import *
 
 exception = {0: "La machine n'appelle aucune machine.\n",
             1: "Il n'existe pas de fichier correspondant à la machine appelée dans le répertoire.\n",
@@ -13,8 +13,7 @@ exception = {0: "La machine n'appelle aucune machine.\n",
             7: "Il y a un appel de machine. Veuillez utiliser le linker avant d'utiliser cette fonctionnalité.\n"
             }
 
-
-if __name__ == "__main__":
+def main():
     os.system("cls")
     # Détermine la taille du terminal pour adapter l'affichage
 
@@ -60,3 +59,5 @@ if __name__ == "__main__":
 
             
 
+if __name__ == "__main__":
+    main()

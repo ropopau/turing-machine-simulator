@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "turingsim"
+version = "0.0.0"
+description = "Implementation of a Turing machine"
+authors = ["Sanghyeon PARK (ropopau)"]
+packages = [{ include = "turingsim", from = "src" }]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.2.1"
+
+[tool.poetry.scripts]
+tms = "src.turingsim.main:main"
+
