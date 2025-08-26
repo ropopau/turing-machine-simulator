@@ -26,7 +26,7 @@ Then for the transitions:
 - One transition follows the following syntax (example for a 2 tapes machine):
 ```
 qInit,ReadTape1,ReadTape2
-qNext,WriteTape1,WriteTape2,MoveTape1,MoveTape1
+qNext,WriteTape1,WriteTape2,MoveTape1,MoveTape2
 ```
 Just look at the examples for more understanding
 
