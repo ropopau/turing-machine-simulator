@@ -16,10 +16,10 @@ Then follow the instruction.
 I will not really explain how a turing machine formal description works, but more about the syntax:
 
 you have first 4 mandatory headers:
-- &name -> the name of your machine
-- &init -> the initial state
-- &accept -> the accepting state
-- &nbr -> the number of tapes
+- `&name` -> the name of your machine
+- `&init` -> the initial state
+- `&accept` -> the accepting state
+- `&nbr` -> the number of tapes
 
 Then for the transitions:
 
