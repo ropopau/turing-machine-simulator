@@ -1,6 +1,6 @@
 import argparse
 
-from .tui import TUI
+from .interface.Tui import Tui
 
 
 def main():
@@ -12,6 +12,6 @@ def main():
         help="Specify one or more directory where the turing machines files could be found"
     )
     args = parser.parse_args()
-    tui: TUI = TUI(args.dir)
+    tui: Tui = Tui (args.dir)
     tui.show_home()
             

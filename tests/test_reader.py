@@ -21,4 +21,4 @@ class TestReader(unittest.TestCase):
     def test_read_Ok(self):
         r = reader.reader("tests\\code_test\\TEST_READER_Ok.tur")
         res = turing.exec(r, "11001", 0, 20, False)
-        self.assertEqual(res.get_bandes().get_mot_str(1), "33223")  
+        self.assertEqual(res.bandes.get_mot_str(1), "33223")  

@@ -29,7 +29,7 @@ class TestLinker(unittest.TestCase):
 
         ex1 = turing.exec(res, "12001", 0, 20, False)
         ex2 = turing.exec(eq_res, "12001",0, 20, False)
-        self.assertEqual(ex1.get_bandes().get_list(), ex2.get_bandes().get_list())
+        self.assertEqual(ex1.bandes.tapes_and_pos, ex2.bandes.tapes_and_pos)
     
     def test_deux_appels(self):
         r = reader.reader("tests\\code_test\\TEST_LINKER_Copy_Erase.tur")
@@ -53,7 +53,7 @@ class TestLinker(unittest.TestCase):
         ex1 = turing.exec(res, "132031", 0, 20, False)
         ex2 = turing.exec(eq_res, "132031",0, 20, False)
 
-        self.assertEqual(ex1.get_bandes().get_list(), ex2.get_bandes().get_list())
+        self.assertEqual(ex1.bandes.tapes_and_pos, ex2.bandes.tapes_and_pos)
 
 if __name__ == '__main__':
     unittest.main()

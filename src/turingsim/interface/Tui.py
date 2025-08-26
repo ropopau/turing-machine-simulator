@@ -3,13 +3,12 @@ import os
 from pathlib import Path
 
 
+from ..core.TuringMachine import TuringMachine
+from ..utils.reader import reader
+from ..utils.misc import clear_screen
 
-from .core.TuringMachine import TuringMachine
-from .utils.reader import reader
-from .utils.misc import clear_screen
 
-
-class TUI():
+class Tui():
     def __init__(self, directories: List[str] = []):
         self.directories: List[str] = directories 
         self.machines_abs_path: List[Path] = [] 
@@ -26,10 +25,10 @@ class TUI():
                 print("{0} is not found or is not a directory.".format(directory))
 
 
-    def home_or_exit(self):
-        print("=========================================================")
-        print("| (1): Return to home menu | (2): Exit the simulator :( |")
-        print("=========================================================")
+    def home_or_exit(self):                  
+        print("========================================")
+        print("| (1): Return to home menu | (2): Exit |")
+        print("========================================")
 
         rep: str = input("Choose an option by its index -> ")
         match rep:
@@ -41,6 +40,13 @@ class TUI():
 
     @clear_screen
     def show_home(self):
+        print("============================================================================")
+        print("| ╔╦╗┬ ┬┬─┐┬┌┐┌┌─┐  ╔╦╗┌─┐┌─┐┬ ┬┬┌┐┌┌─┐                                    |")
+        print("|  ║ │ │├┬┘│││││ ┬  ║║║├─┤│  ├─┤││││├┤                                     |")
+        print("|  ╩ └─┘┴└─┴┘└┘└─┘  ╩ ╩┴ ┴└─┘┴ ┴┴┘└┘└─┘                                    |")
+        print("| ╔═╗┬┌┬┐┬ ┬┬  ┌─┐┌┬┐┌─┐┬─┐                                                |")            
+        print("| ╚═╗│││││ ││  ├─┤ │ │ │├┬┘                                                |")            
+        print("| ╚═╝┴┴ ┴└─┘┴─┘┴ ┴ ┴ └─┘┴└─                  by Sanghyeon PARK (ropopau)   |")    
         print("============================================================================")
         print("| (1): Use machine | (2): Link machine | (3): Optimize machine | (4): Exit |")
         print("============================================================================")
@@ -56,24 +62,34 @@ class TUI():
             case "4" | _:
                 exit()
 
-
+  
     @clear_screen
     def show_exec(self):
+        print("============= Found .tur files =============")
+
         for ind, path in enumerate(self.machines_abs_path):
             print("({0}): {1}".format(ind, path))
-
-        print("Choose a turing machine to execute by its index)")
+        print("============================================")
+        print("Choose a turing machine by its index")
         while True:
             try:
                 res: int = int(input("-> "))
                 formel = reader(self.machines_abs_path[res])
-                print(formel)
                 tur: TuringMachine = TuringMachine(formel)
-                tur.exec("1001", 1, self.TailleTerminal)
+                word: str = input("Type a word\n-> ")
+                speed: int = int(input("Choose an execution speed from 1 to 5 (1 is the slowest 5 is the fastest)\n-> "))
+                if speed < 1 or speed > 5:
+                    print("Invalid speed. Executing with default speed")
+                    speed = 1
+
+                real_speed: float = (5 - speed) / 4
+
+                tur.exec(word, real_speed, self.TailleTerminal)
                 self.home_or_exit()
-            except (IndexError, ValueError):
-                print("You must choose an integer AND in the range of indexes shown above")
-            
+            except (IndexError, ValueError) as e:
+                print("Invalid input")
+            except (KeyboardInterrupt):
+                exit()
             
 
     @clear_screen

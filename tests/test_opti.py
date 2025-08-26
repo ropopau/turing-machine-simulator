@@ -11,8 +11,8 @@ class TestLinker(unittest.TestCase):
         rs = modifier.simplification(r)
         # Code dont les codes morts ont été détruits
         re = modifier.elim(rs)
-        r_rs = turing.exec(r, "11001", 0, 20, False).get_bandes().get_mot_str(1) == turing.exec(rs, "11001", 0, 20, False).get_bandes().get_mot_str(1)
-        rs_re = turing.exec(rs, "11001", 0, 20, False).get_bandes().get_mot_str(1) == turing.exec(re, "11001", 0, 20, False).get_bandes().get_mot_str(1)
+        r_rs = turing.exec(r, "11001", 0, 20, False).bandes.get_mot_str(1) == turing.exec(rs, "11001", 0, 20, False).bandes.get_mot_str(1)
+        rs_re = turing.exec(rs, "11001", 0, 20, False).bandes.get_mot_str(1) == turing.exec(re, "11001", 0, 20, False).bandes.get_mot_str(1)
         # vrai si le resultat de re, r_rs et rs_re est le meme
         res = r_rs == rs_re
         # Si res et la transition inutile plus dans la liste des transitions, alors test ok.

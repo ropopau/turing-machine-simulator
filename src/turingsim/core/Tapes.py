@@ -1,52 +1,46 @@
+from typing import List, Tuple
 class Tapes:
      # Initie une bande avec nbr nombre de rubans
-    def __init__(self):
-        self.__listRubans = []
+    def __init__(self, nbr):
+        self.tapes_nbr = nbr
+        self.tapes: Tuple[List] = tuple([[] for _ in range(nbr)])
+        self.tapes_pos = [0 for _ in range(nbr)]
 
-    def init_word(self, nbr, mot):
-        self.__listRubans = [{"mot": ["#" for _ in range (len(mot))], "pos":0} for _ in range (nbr)]
-        self.__listRubans[0]["mot"] = list(mot)
+    def init_word(self, mot):
+        empty_tape: str = "#" * len(mot)
+        self.tapes[0].extend(mot)
+        for ind in range(1, self.tapes_nbr):
+            self.tapes[ind].extend(empty_tape)
 
     # Vérifie qu'il y a au moins une case vide avant et après la position actuelle
     def verification(self):
-        for elem in self.__listRubans:
-            if elem["pos"] == 0:
-                self.ajoute_debut()
-            elif elem["pos"] == len(elem["mot"]):
-                self.ajoute_fin()
-    # Ajoute une case vide au debut et a la fin
-    def ajoute_debut(self):
-        for elem in self.__listRubans:
-            if elem["mot"][0] == "+":
-                elem["mot"][0] = "#"
-            elem["mot"].insert(0, "+")
-            elem["pos"] += 1
-    
-    def ajoute_fin(self):
-        for elem in self.__listRubans:
-            if elem["mot"][-1] == "+":
-                elem["mot"][-1] = "#"
-            elem["mot"].append("+")
+
+        for ind in range(self.tapes_nbr):
+            if self.tapes_pos[ind] == 0:
+                self.tapes[ind].insert(0, "#")
+                self.tapes_pos[ind] += 1
+            elif self.tapes_pos[ind] == len(self.tapes[ind]):
+                self.tapes[ind].append("#")
+                
 
     # Getters et setters
-    def get_list(self):
-        return self.__listRubans
-
-    def get_pos(self, quelRuban):
-        return self.__listRubans[quelRuban]["pos"]
+    @property
+    def tapes_and_pos(self):
+        return [{"mot": self.tapes[ind], "pos": self.tapes_pos[ind]} for ind in range(self.tapes_nbr)]
     
-    def get_mot(self, quelRuban):
-        return self.__listRubans[quelRuban]["mot"]
+    @property
+    def tapes(self):
+        return self._tapes
     
-    def get_mot_str(self, quelRuban):
-        return "".join(map(str, self.get_mot(quelRuban))).strip("+").strip("#")
+    @tapes.setter
+    def tapes(self, value):
+        self._tapes = value
 
     def set_lettre(self, quelRuban, lettre):
-        rub = self.__listRubans[quelRuban]
-        rub["mot"][rub["pos"]] = lettre
+        self.tapes[quelRuban][self.tapes_pos[quelRuban]] = lettre
 
     def set_pos(self, quelRuban, mvt):
         if mvt == "<":
-            self.__listRubans[quelRuban]["pos"] -= 1
+            self.tapes_pos[quelRuban] -= 1
         elif mvt == ">":
-            self.__listRubans[quelRuban]["pos"] += 1
+            self.tapes_pos[quelRuban] += 1

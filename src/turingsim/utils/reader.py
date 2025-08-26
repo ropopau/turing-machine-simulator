@@ -1,5 +1,3 @@
-import os
-                
 # Lit un fichier .tur et renvoie la définition formel de la machine sous forme de dictionnaire.
 def reader(fichier):
     Si = [] # ok
