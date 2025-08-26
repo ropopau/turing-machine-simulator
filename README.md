@@ -1,4 +1,7 @@
 # Turing Machine Simulator
+
+/!\ It is a project from my bachelor years that I'm refactoring in my sparetime (Because I like this project) haha If you see some huge mistakes, it's totally normal, it will be fix soon (depending on my motivation)
+
 ## Quickstart
 
 To test with the givens turing machine files:
