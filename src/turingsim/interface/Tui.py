@@ -66,6 +66,9 @@ class Tui():
     @clear_screen
     def show_exec(self):
         print("============= Found .tur files =============")
+        if len(self.machines_abs_path) == 0:
+            print("No .tur files found in the given paths")
+            self.home_or_exit()
 
         for ind, path in enumerate(self.machines_abs_path):
             print("({0}): {1}".format(ind, path))
@@ -85,7 +88,7 @@ class Tui():
                 real_speed: float = (5 - speed) / 4
 
                 tur.exec(word, real_speed, self.TailleTerminal)
-                self.home_or_exit()
+                e
             except (IndexError, ValueError) as e:
                 print("Invalid input")
             except (KeyboardInterrupt):

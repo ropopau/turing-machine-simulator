@@ -1,44 +1,37 @@
-# SIMULATEUR D'UNE MACHINE DE TURING
-## Utilisation
- * Le makefile peut ne pas fonctionner si vous avez une version de python inférieur a 3.10. En effet nous avons rencontré quelques soucis de commande: Sur ubuntu, nous devions utiliser la commande 'python3.10 fichier.py' et sur windows, 'python fichier.py'. Notre fichier lance la commande 'python fichier.py'.
- * Si vous êtes sur linux, utilisez la commande make. 
- * Sinon vous pouvez l'exécuter manuellement à partir du dossier racine "TDL".
- *
-        python -m unittest
-        python src/main.py
- * Il y a des messages d'erreurs pour la plupart des erreurs. Cependant il se peut que certaines soient passés à la trappe. Voici les messages d'erreurs contenus dans le fichier main.py:
- *          0: "La machine n'appelle aucune machine.",
-            1: "Il n'existe pas de fichier correspondant à la machine appelée dans le répertoire.",
-            2: "Veuillez ajouter les fichiers *.tur nécessaire pour utiliser le linker.",
-            100: "Erreur de syntaxe dans l'entête.", 
-            101: "Une transition est présente plus qu'une fois.", 
-            102: "Erreur de syntaxe dans une transitions.",
-            103: "Nombre de ruban incorrect",
-            105: "Il y un appel de machine. Utilisez d'abord le linker pour éxécuter cette machine.",
-            7: "Il y a un appel de machine. Veuillez utiliser le linker avant d'utiliser cette fonctionnalité."
-            
-## Interface
-#### L'interface affiche 4 options: 
+# Turing Machine Simulator
+## Quickstart
 
-        Utiliser le linker: L
-        Exécuter une machine: E
-        Optimiser un code de turing: O
-        Quitter: Q
+To test with the givens turing machine files:
 
- * Le linker permet de créer un fichier contenant le code d'une machine équivalente à la machine choisi. Si la machine choisie possède plusieurs appels de machine, alors il "fusionnera" tout ces machines ensemble.
- * La deuxième option permet d'exécuter une machine choisie. Si elle n'est pas utilisable, alors cela renvoie le code d'erreur adapté.
- * L'optimisation nous donne le choix entre trois options. La simplification, la suppresion des codes morts ou les deux. On privilégiera naturellement la troisième option qui permet de faire les deux en même temps.
- * 
-        Simplifier: S
-        Elimination: E
-        Les deux: B
- * Quitter permet de quitter l'application
- 
-### Système de fichier
- * Les fichiers contenant le code d'une machine de turing ont l'extensions ".tur" pour une question de facilité d'utilisation.
- * Un fichier possède une entête avec toute les informations. Ces informations sont toute les lignes commençant par "&".
- * Il faut 4 éléments dans l'entête: Le nom, l'état initial, l'état final, et le nombre de rubans.
- * Les transitions reprennent la syntaxe du site turingmachinesimulator.com.
- * Les machines de turing basique comme retour à droite, retour à droite etc, sont situés dans le dossier ./turs. Lors de l'utilisation du linker, le programme cherchera les machines appelées dans ce dossier.
- 
-    
+Do, at the project root:
+```bash
+poetry install
+poetry run tms -d ./turs
+```
+
+Then follow the instruction.
+
+## How to write a .tur file
+
+I will not really explain how a turing machine formal description works, but more about the syntax:
+
+you have first 4 mandatory headers:
+- &name -> the name of your machine
+- &init -> the initial state
+- &accept -> the accepting state
+- &nbr -> the number of tapes
+
+Then for the transitions:
+
+- One transition follows the following syntax (example for a 2 tapes machine):
+```
+qInit,ReadTape1,ReadTape2
+qNext,WriteTape1,WriteTape2,MoveTape1,MoveTape1
+```
+Just look at the examples for more understanding
+
+- For the movements, `>` is to go right, `<` to go left and `-` to not move
+
+- `#` is for empty character
+
+- `*` is for any character
