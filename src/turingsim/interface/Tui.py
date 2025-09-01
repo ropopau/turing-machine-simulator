@@ -88,7 +88,7 @@ class Tui():
                 real_speed: float = (5 - speed) / 4
 
                 tur.exec(word, real_speed, self.TailleTerminal)
-                e
+                self.home_or_exit(); 
             except (IndexError, ValueError) as e:
                 print("Invalid input")
             except (KeyboardInterrupt):
