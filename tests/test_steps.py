@@ -1,25 +1,36 @@
-import unittest
-from src import turing, reader
+import pytest
 
-class TestSteps(unittest.TestCase):
-    def test_exec(self):
-        r = reader.reader("tests\\code_test\\TEST_STEPS.tur")
-        res = turing.exec(r, "11001", 0, 20, False)
-        self.assertEqual(res.bandes.get_mot_str(0), "00110" )
+from src.turingsim.utils.reader import reader
+from src.turingsim.core.TuringMachine import TuringMachine
 
-    def test_un_pas(self):
-        r = reader.reader("tests\\code_test\\TEST_STEPS.tur")
-        res = turing.un_pas(r, "11001")
-        self.assertEqual(res.bandes.get_mot_str(0), "01001" )
-    
-    def test_etoile(self):
-        r = reader.reader("tests\\code_test\\TEST_STEPS_etoile.tur")
-        res = turing.exec(r, "11001", 0, 20, False)
-        # Verifie la bande 2
-        self.assertEqual(res.bandes.get_mot_str(1), "11001" )
 
-    def test_pourcent(self):
-        r = reader.reader("tests\\code_test\\TEST_STEPS_pourcent.tur")
-        res = turing.exec(r, "1124423", 0, 20, False)
-        # Verifie la bande 1
-        self.assertEqual(res.bandes.get_mot_str(0), "1120022" )
+def test_exec():
+    r = reader("tests/code_test/TEST_STEPS.tur")
+    t = TuringMachine(r)
+    res = t.exec("11001", 0, 20)
+    assert "".join(res[0]) == "#00110#"
+
+
+def test_un_pas():
+    r = reader("tests/code_test/TEST_STEPS.tur")
+    t = TuringMachine(r)
+    t.set_word("11001")
+    t.pas()  # un seul pas
+    assert "".join(t.tapes.tapes[0]) == "#01001"
+
+
+def test_etoile():
+    r = reader("tests/code_test/TEST_STEPS_etoile.tur")
+    t = TuringMachine(r)
+    res = t.exec("11001", 0, 20)
+    # Vérifie la bande 2
+    assert "".join(res[1]) == "#11001#"
+
+
+def test_pourcent():
+    r = reader("tests/code_test/TEST_STEPS_pourcent.tur")
+    t = TuringMachine(r)
+    res = t.exec("1124423", 0, 20)
+    # Vérifie la bande 1
+    assert "".join(res[0]) == "#1120022#"
+

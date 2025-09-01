@@ -13,4 +13,4 @@ pytest = "8.2.1"
 
 [tool.poetry.scripts]
 tms = "src.turingsim.main:main"
-
+test = "pytest"

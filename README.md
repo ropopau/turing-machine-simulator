@@ -10,6 +10,10 @@ Do, at the project root:
 ```bash
 poetry install
 poetry run tms -d ./turs
+
+# Test with pytest
+poetry run pytest tests/
+
 ```
 
 Then follow the instruction.

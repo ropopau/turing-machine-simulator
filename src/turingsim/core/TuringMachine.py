@@ -82,8 +82,6 @@ class TuringMachine:
         self.set_word(mot)
         etat = self.__formel["qi"]
 
-        steps = []
-        steps.append(deepcopy(self.tapes.tapes_and_pos))
 
         self.affichage(etat, vitesse)
         while etat != self.__formel["qf"]:
@@ -91,16 +89,14 @@ class TuringMachine:
             etat = self.__etatActu
 
             print(etat)
-            steps.append(deepcopy(self.tapes.tapes_and_pos))
 
             self.affichage(etat, vitesse)
             if etat == "Non accepté":
                 break
         
-        steps.append(deepcopy(self.tapes.tapes_and_pos))
 
         self.affichage(etat, vitesse)
-        return steps
+        return self.tapes.tapes
 
     # Affiche les rubans à chaques étapes. Elle s'adapte à la taille du terminal sur lequel le programme est éxécuté.
     @clear_screen
